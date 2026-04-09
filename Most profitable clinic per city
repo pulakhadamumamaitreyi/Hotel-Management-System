@@ -1,0 +1,19 @@
+WITH profit_cte AS (
+    SELECT 
+        c.city,
+        c.cid,
+        SUM(cs.amount) - COALESCE(SUM(e.amount),0) AS profit
+    FROM clinics c
+    LEFT JOIN clinic_sales cs ON c.cid = cs.cid
+    LEFT JOIN expenses e ON c.cid = e.cid
+    WHERE DATE_TRUNC('month', cs.datetime) = '2021-09-01'
+    GROUP BY c.city, c.cid
+),
+ranked AS (
+    SELECT *,
+        RANK() OVER (PARTITION BY city ORDER BY profit DESC) AS rnk
+    FROM profit_cte
+)
+SELECT *
+FROM ranked
+WHERE rnk = 1;
