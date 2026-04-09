@@ -1,0 +1,7 @@
+SELECT 
+    bc.booking_id,
+    SUM(bc.item_quantity * i.item_rate) AS total_amount
+FROM booking_commercials bc
+JOIN items i ON bc.item_id = i.item_id
+WHERE DATE_TRUNC('month', bc.bill_date) = '2021-11-01'
+GROUP BY bc.booking_id;
