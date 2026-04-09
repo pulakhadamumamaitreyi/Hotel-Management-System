@@ -1,0 +1,7 @@
+SELECT b.user_id, b.room_no
+FROM bookings b
+WHERE (b.user_id, b.booking_date) IN (
+    SELECT user_id, MAX(booking_date)
+    FROM bookings
+    GROUP BY user_id
+);
